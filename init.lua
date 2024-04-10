@@ -90,6 +90,7 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.cmd 'hi clear'
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 
@@ -113,12 +114,13 @@ vim.opt.showmode = false
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.keymap.set('n', '<leader>y', '"+y')
-vim.keymap.set('n', '<leader>yy', '"+yy')
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y')
+vim.keymap.set({ 'n', 'v' }, '<leader>yy', '"+yy')
 vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p')
 vim.keymap.set('v', 'p', '"_dP')
 vim.keymap.set('v', '<leader>yp', '"_dP')
 
+vim.opt.termguicolors = true
 -- Enable break indent
 vim.opt.breakindent = true
 
@@ -241,6 +243,63 @@ require('lazy').setup({
   --
   --  This is equivalent to:
   --    require('Comment').setup({})
+  {
+    'akinsho/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
+  },
+
+  {
+    'rcarriga/nvim-dap',
+    dependencies = {
+      'mfussenegger/nvim-dap-ui',
+    },
+    config = function()
+      local dap = require 'dap'
+      local dapui = require 'dapui'
+
+      require('dapui').setup()
+
+      dap.listeners.before.attach.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated.dapui_config = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited.dapui_config = function()
+        dapui.close()
+      end
+
+      vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = '[D]ap toggle [B]reakpoint' })
+
+      vim.keymap.set('n', '<leader>dc', function()
+        dap.continue()
+      end, { desc = '[D]ap [C]ontunue' })
+
+      vim.keymap.set('n', '<leader>dso', function()
+        dap.step_over {}
+      end, { desc = '[D]ap [S]tep [O]ver' })
+
+      vim.keymap.set('n', '<leader>dsi', function()
+        dap.step_into()
+      end, { desc = '[D]ap [S]tep [I]nto' })
+
+      vim.keymap.set('n', '<leader>dsO', function()
+        dap.step_out()
+      end, { desc = '[D]ap [S]tep [O]ut' })
+
+      vim.keymap.set('n', '<leader>dt', function()
+        dapui.toggle()
+      end, { desc = '[D]ap UI [T]oggle' })
+    end,
+  },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
@@ -799,6 +858,8 @@ require('lazy').setup({
       vim.api.nvim_set_hl(0, 'GitSignsDelete', { bg = 'None' })
       vim.api.nvim_set_hl(0, 'GitSignsAdd', { bg = 'None' })
 
+      vim.api.nvim_set_hl(0, 'TelescopeNormal', { bg = '#504945' })
+      vim.api.nvim_set_hl(0, 'NormalFloat', { fg = '#fe8019' })
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
