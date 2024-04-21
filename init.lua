@@ -357,6 +357,29 @@ require('lazy').setup({
     },
   },
 
+  {
+    'nvim-tree/nvim-tree.lua',
+    version = '*',
+    lazy = false,
+    dependencies = {
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('nvim-tree').setup {
+        actions = {
+          open_file = {
+            quit_on_open = true,
+          },
+        },
+      }
+      local api = require 'nvim-tree.api'
+
+      vim.keymap.set({ 'n', 'v' }, '<leader>tt', function()
+        api.tree.toggle { path = '<args>', find_file = false, update_root = false, focus = true }
+      end)
+    end,
+  },
+
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
