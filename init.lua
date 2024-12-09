@@ -120,6 +120,12 @@ vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p')
 vim.keymap.set('v', 'p', '"_dP')
 vim.keymap.set('v', '<leader>yp', '"_dP')
 
+vim.api.nvim_set_keymap('n', '<A-j>', ':m .+1<CR>==', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<A-k>', ':m .-2<CR>==', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<A-j>', '<Esc>:m .+1<CR>==gi', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<A-k>', '<Esc>:m .-2<CR>==gi', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<A-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<A-k>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
 vim.opt.termguicolors = true
 -- Enable break indent
 vim.opt.breakindent = true
@@ -130,6 +136,11 @@ vim.opt.undofile = true
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+
+-- Tab size
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = false
 
 -- Keep signcolumn on by default
 vim.opt.signcolumn = 'yes'
@@ -233,7 +244,6 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
